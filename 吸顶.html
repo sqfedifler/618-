@@ -1,0 +1,193 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>京东首页</title>
+<style>
+	div,img,body,input,a,button,ul,li{ margin: 0; padding: 0}
+	input{ border-width:1px; outline: none}
+	ul,li{list-style:none;}
+	a{ text-decoration:none;}
+	.wrap{width:100%; position: relative;}
+	.wrap input[type="search"]{ position: absolute; width: 500px; height: 33px; left: 50%; top:137px; margin-left:-290px;}
+	.banner{position:fixed; height:48px; top:0;left:0; width: 100%; border-bottom: 2px solid #f10214; background-color: #fff; }
+	.showbanner{ animation:bannerTop 1s ease-in-out; }
+	.search-m{margin: auto;width: 1190px; height: 48px; position: relative; z-index: 1}
+	.search-m .search_logo{display: block; position: absolute;left: 0; top: 4px; width: 125px;height: 40px;}
+	.search_logo a{background-repeat: no-repeat;background-position: -195px 0;overflow: hidden;display: block;width: 125px;height: 40px; background-image:url(sprite.head.png);text-indent: -999px;	
+	}
+	.search-m .form{position: absolute; left: 320px; top: 6px; width: 550px;height: 35px;}
+	.search-m .form .text{width: 450px; height: 23px; padding: 4px 44px 4px 4px; line-height: 25px; font-size: 14px; color: #333; position: absolute; top:0;  background: #efefef; border-color: #efefef}
+	.photo-search-btn{display: block; width: 19px;height: 15px;position: absolute; top:10px; right: 65px;overflow: hidden; background:url(sprite-photo-search.png); cursor: pointer}
+	.photo-search-btn:hover{background-position: -30px 0;}
+	.search-m .button{width:50px; height: 33px; position: absolute;top: 0; right: 0; background: #f10215; outline: none; border: none; cursor: pointer; }
+	.button .iconfont{display: block; width: 20px; height: 20px; position: absolute;left: 15px; top: 9px; background: url(sprite-photo-search.png) -55px 0; overflow: hidden; text-indent: -99em;}
+
+	@keyframes bannerTop{
+		from{
+			top:-50px;
+		}
+		to{
+			top:0;
+		}
+	}
+
+	
+	ul.toolbar{right: 20px;  width: 35px; height: auto; }
+	ul.abs{position: absolute;top:400px; transition: top 3s;}
+	ul.fixed{ position: fixed; }
+	.toolbar li{width: 35px; height: 35px;margin-bottom: 1px;cursor: pointer; background-color: #7a6e6e;border-radius: 3px; }
+	.toolbar li i{display:block; height: 100%; background: url(toolbars.png) no-repeat -86px -172px; width: 100%; overflow: hidden;}
+	.toolbar li.tools_1 i{ background-position: -86px -172px; }
+	.toolbar li.tools_2 i{ background-position: -48px 0; }
+	.toolbar li.tools_3 i{ background-position: -47px -49px; }
+	.toolbar li.tools_4 i{ background-position: -47px -100px; }
+    .toolbar li.tools_5 i{ background-position: -187px -152px; }
+	.toolbar li.tools_6 i{ background-position: -47px -152px; }
+	.toolbar li.tools_7 i{ background-position: -47px -250px; }
+	
+</style>
+</head>
+	
+	
+
+<body>
+	
+ <div class="wrap">
+	<img src="jd_photo.png"alt="" />
+	<input type="search" id="search" />
+	<div id="banner" class="banner" style="display: none">
+		<div class="search-m">
+			<div class="search_logo">
+				<a href="javascript:void(0);" class="search_logo_lk">京东，多块好省</a>
+			</div>
+			<div class="form">
+			  <input type="text" class="text" />
+			  <span class="photo-search-btn"></span>
+			  <button class="button">
+				<i class="iconfont"></i>
+			  </button>
+			</div>
+		</div>
+
+	</div> 
+	<ul class="toolbar abs">
+		<li class="tools_1"><i></i></li>
+		<li class="tools_2"><i></i></li>
+		<li class="tools_3"><i></i></li>
+		<li class="tools_4"><i></i></li>
+		<li class="tools_5"><i></i></li>
+		<li class="tools_6"><i></i></li>
+		<li class="tools_7" id="back" style="display: none"><i></i></li>
+	</ul> 
+	 
+	 
+ </div>
+ <script>
+	 (function(){
+		 var oSearch=document.querySelector('input[type="search"]');
+		 var oBanner=document.querySelector('#banner');
+		 var oToolBar=document.querySelector('.toolbar');
+         var oBack=document.querySelector('#back');
+		  oBack.timer=null;
+		 
+		 ShowBanner();
+		 ShowFixedFloat();
+		 isShowBack();
+		 window.onscroll=function(){
+			 ShowBanner();
+			 ShowFixedFloat();
+			 isShowBack();
+		 }
+		 oBack.onclick=function(){
+			 MoveScroll(0);
+			 
+		 }
+		 
+		 
+		 function MoveScroll(num){
+			 cancelAnimationFrame(oBack.timer);
+			 var ScrollTop=document.documentElement.scrollTop||document.body.scrollTop;
+			 var speed;
+			 oBack.timer=requestAnimationFrame(Move);
+			 
+			 function Move(){
+				if(Math.abs(ScrollTop-num)<2){
+				  document.documentElement.scrollTop=document.body.scrollTop=num;
+				  cancelAnimationFrame(oBack.timer);
+			    }else{
+				  speed=(num-ScrollTop)/12;
+				  ScrollTop+=speed;
+				  document.documentElement.scrollTop=document.body.scrollTop=ScrollTop;
+				  oBack.timer=requestAnimationFrame(Move);
+			     } 
+			 }
+		 }
+		  
+		 function ShowFixedFloat(){
+			var ScrollTop=document.documentElement.scrollTop||document.body.scrollTop;
+			var BannerB=getEleTop(oBanner).top+oBanner.offsetHeight+ScrollTop;
+			var BarTop=getEleTop(oToolBar).top;
+			 
+			 
+			if(BannerB>BarTop){
+				oToolBar.classList.remove('abs');
+				oToolBar.classList.add('fixed');
+				oToolBar.style.top=oBanner.offsetHeight+'px';
+				
+				
+			}else{
+				oToolBar.classList.remove('fixed');
+				oToolBar.classList.add('abs');
+				oToolBar.style.top=400+'px';
+				
+			}
+			 
+		 }
+
+		function ShowBanner(){
+		 var ScrollTop=document.documentElement.scrollTop||document.body.scrollTop;
+		 var oSearchTop=getEleTop(oSearch).top;
+		 var oSearchB=oSearchTop+oSearch.offsetHeight;
+		 if(ScrollTop>oSearchB){
+			 oBanner.style.display="block";
+			 oBanner.classList.add('showbanner');
+		 }else{
+			 
+			 oBanner.style.display="none";
+			 oBanner.classList.remove('showbanner');
+		 }
+	    }
+		 
+		 function isShowBack(){
+			var ScrHeight=window.innerHeight;
+			var ScrollTop=document.documentElement.scrollTop||document.body.scrollTop;
+			if(ScrollTop>ScrHeight){
+			    oBack.style.display="block"; 
+			  }else{
+				oBack.style.display="none";  
+			  }
+			 
+		 }
+
+	 })()
+	 
+       function getEleTop(obj){
+		  var pStion={
+			  left:0,
+			  top:0
+		     }
+		  while(obj){
+			pStion['left']+=obj.offsetLeft;
+			pStion['top']+=obj.offsetTop;
+		    obj=obj.offsetParent;
+		  } 
+		  return pStion;  
+	   }
+	 
+	 
+	 
+	
+ </script>
+</body>
+</html>
